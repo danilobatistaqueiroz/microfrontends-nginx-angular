@@ -1,0 +1,41 @@
+version: "3.7"
+
+services:  
+  auth:
+    container_name: auth
+    build: 
+      context: ./auth
+    networks:
+      - local-network
+
+  advisor:
+    container_name: advisor
+    build:  
+      context: ./advisor
+    networks:
+      - local-network
+    
+  customer:
+    container_name: customer
+    build:  
+      context: ./customer  
+    networks:
+      - local-network
+    
+  orchestrator:
+    container_name: orchestrator
+    build:    
+      context: ./nginx
+    volumes:
+      - ./assets:/var/www
+    ports:
+      - "80:80"
+    networks:
+      - local-network
+    depends_on:
+      - auth
+      - advisor
+      - customer
+
+networks:
+  local-network:
